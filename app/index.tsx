@@ -1,7 +1,11 @@
 import { Text, View, StyleSheet, ImageBackground, TouchableOpacity } from "react-native";
 import { Link } from "expo-router";
+import { useRouter } from "expo-router";
+import { Button } from "@react-navigation/elements";
 
 export default function Index() {
+
+  const router = useRouter();
   return (
     <ImageBackground
       source={require("../assets/images/landingPageBackground.jpg")}
@@ -16,11 +20,11 @@ export default function Index() {
           Empower your health journey with innovative AI insights that guide you toward a vibrant, healthier life. Experience the future of personalized wellness.
         </Text>
 
-        <Link href="/(auth)/signUp" asChild>
-          <TouchableOpacity style={styles.exploreButton}>
+        <TouchableOpacity style= {styles.exploreButton} onPressOut={() => router.push("/home/homePage")}>
             <Text style={styles.exploreButtonText}>Explore </Text>
+            
           </TouchableOpacity>
-        </Link>
+          {/* <Button >         </Button> */}
       </View>
     </ImageBackground>
   );
@@ -49,6 +53,7 @@ const styles = StyleSheet.create({
     fontFamily: "sans-serif",
   },
   subtitle: {
+    minWidth :"70%",  
     fontSize: 18,
     textAlign: "center",
     color: "#34495e",
@@ -63,6 +68,7 @@ const styles = StyleSheet.create({
     fontFamily: "sans-serif",
   },
   exploreButton: {
+    marginTop: 53,
     backgroundColor: "#071bf7", // Same as title color
     paddingVertical: 12,
     paddingHorizontal: 40,
@@ -74,8 +80,8 @@ const styles = StyleSheet.create({
   },
   exploreButtonText: {
     fontSize: 18,
-    // fontWeight: "bold",
     color: "#fff",
+    // fontWeight: "bold",
     // textTransform: "uppercase",
   },
 });
