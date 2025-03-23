@@ -3,6 +3,14 @@ import { View, Image, TouchableOpacity, Text, StyleSheet, ScrollView, TextInput,
 import * as ImagePicker from 'expo-image-picker';
 
 export default function ImagePickerScreen() {
+  let url = ""
+  if (Platform.OS == 'web'){
+    url = 'http://localhost:3000';
+  }
+  else if (Platform.OS == 'android')
+  {
+    url = 'http://192.168.43.112:3000'
+  }
   const [images, setImages] = useState<string[]>([]);
   const [inputText, setInputText] = useState('');
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
@@ -24,25 +32,17 @@ export default function ImagePickerScreen() {
 
   const uploadImage = async (imageBase64: string | null | undefined) => {
     try {
-      const response = await fetch('http://localhost:3000/upload', {
+      const response = await fetch(`${url}/upload`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ image: imageBase64 }),
       });
       const data = await response.json();
       console.log('Upload success:', data);
-      if (Platform.OS === 'web') {
-        window.alert("Image uploaded successfully");
-      } else {
-        Alert.alert("Image uploaded successfully");
-      }
+      
     } catch (error) {
       console.error('Upload error:', error);
-      if (Platform.OS === 'web') {
-        window.alert("Error uploading the image");
-      } else {
-        Alert.alert("Error uploading the image");
-      }
+      
     }
   };
 
@@ -53,7 +53,7 @@ export default function ImagePickerScreen() {
     setInputText('');
 
     try {
-      const response = await fetch('http://localhost:3000/chat', {
+      const response = await fetch(`${url}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: inputText }),
