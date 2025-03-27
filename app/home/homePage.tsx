@@ -1,8 +1,37 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Image, TouchableOpacity, Text, StyleSheet, ScrollView, TextInput, ImageBackground, Alert,Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import * as SecureStore from "expo-secure-store";
+import { useLocalSearchParams } from "expo-router";
 
 export default function ImagePickerScreen() {
+
+  // const [user, setUser] = useState(null);
+
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const storedUser = await SecureStore.getItemAsync("user");
+  //     if (storedUser) {
+  //       setUser(JSON.parse(storedUser));
+  //     }
+  //   };
+  //   fetchUser();
+  //   console.log(user);
+  // }, []);
+
+
+  const { user } = useLocalSearchParams();
+  console.log("this is the user from the home page");
+  console.log(user);
+  const userData = user ? JSON.parse(Array.isArray(user) ? user[0] : user) : null;
+
+
+
+
+
+
+
+
   let url = "";
 
   if (Platform.OS == 'web')
@@ -71,6 +100,10 @@ export default function ImagePickerScreen() {
     <ImageBackground source={require('../../assets/images/landingPageBackground.jpg')} style={styles.background}>
       <View style={styles.container}>
         <Text style={styles.title}>Welcome to <Text style={styles.appName}>GenmedX</Text></Text>
+        <Text>Welcome, {userData?.given_name}</Text>
+      <Text>Email: {userData?.email}</Text>
+
+        {/* <Text>Welcome, {user?.given_name || "User"}!</Text> */}
         {/* <Text style={styles.subtitle}>Your uploaded files</Text> */}
 
         {/* dont want to show the images here */}
