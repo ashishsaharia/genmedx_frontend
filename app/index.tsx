@@ -20,7 +20,7 @@ export default function Index() {
           Empower your health journey with innovative AI insights that guide you toward a vibrant, healthier life. Experience the future of personalized wellness.
         </Text>
 
-        <TouchableOpacity style= {styles.exploreButton} onPressOut={() => router.push("/home/homePage")}>
+        <TouchableOpacity style= {styles.exploreButton} onPressOut={() => router.push("/auth/login")}>
             <Text style={styles.exploreButtonText}>Explore </Text>
             
           </TouchableOpacity>

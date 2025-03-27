@@ -3,10 +3,13 @@ import { View, Image, TouchableOpacity, Text, StyleSheet, ScrollView, TextInput,
 import * as ImagePicker from 'expo-image-picker';
 
 export default function ImagePickerScreen() {
-  let url = ""
-  if (Platform.OS == 'web'){
+  let url = "";
+
+  if (Platform.OS == 'web')
+  {
     url = 'http://localhost:3000';
   }
+
   else if (Platform.OS == 'android')
   {
     url = 'http://192.168.43.112:3000'
@@ -42,7 +45,6 @@ export default function ImagePickerScreen() {
       
     } catch (error) {
       console.error('Upload error:', error);
-      
     }
   };
 
