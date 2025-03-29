@@ -21,8 +21,6 @@ export default function ImagePickerScreen() {
 
 
   const { user } = useLocalSearchParams();
-  console.log("this is the user from the home page");
-  console.log(user);
   const userData = user ? JSON.parse(Array.isArray(user) ? user[0] : user) : null;
 
 
@@ -100,8 +98,8 @@ export default function ImagePickerScreen() {
     <ImageBackground source={require('../../assets/images/landingPageBackground.jpg')} style={styles.background}>
       <View style={styles.container}>
         <Text style={styles.title}>Welcome to <Text style={styles.appName}>GenmedX</Text></Text>
-        <Text>Welcome, {userData?.given_name}</Text>
-      <Text>Email: {userData?.email}</Text>
+        <Text>Welcome, {userData?.name}</Text>
+      {/* <Text>Email: {userData?.username}</Text> */}
 
         {/* <Text>Welcome, {user?.given_name || "User"}!</Text> */}
         {/* <Text style={styles.subtitle}>Your uploaded files</Text> */}
