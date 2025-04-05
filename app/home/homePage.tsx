@@ -67,7 +67,7 @@ export default function ImagePickerScreen() {
       const response = await fetch(`${url}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: inputText }),
+        body: JSON.stringify({ message: inputText , userEmail: userData.email }),
       });
       const data = await response.json();
       setMessages([...newMessages, { sender: 'ai', text: data.response }]);
