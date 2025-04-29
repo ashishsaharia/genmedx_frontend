@@ -20,12 +20,17 @@ const { user } = useLocalSearchParams();
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
   const [files, setFiles] = useState<string[]>([]);
 
-  // useEffect(() => {
-  //   fetch(`${url}/uploads/${userData.email}`)
-  //     .then((res) => res.json())
-  //     .then((data) => setFiles(data))
-  //     .catch((err) => console.error(err));
-  // }, [files]);
+
+  console.log(userData.email);
+  
+  useEffect(() => {
+    fetch(`${url}/uploads/${userData.email}`)
+      .then((res) => res.json())
+      .then((data) => setFiles(data))
+      .catch((err) => console.error(err));
+  }, [files]);
+
+
   const [sidebarVisible, setSidebarVisible] = useState(false);
 
   const openFile = async (fileUrl: string) => {

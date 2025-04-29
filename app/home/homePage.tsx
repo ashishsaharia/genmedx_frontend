@@ -88,7 +88,10 @@ export default function ImagePickerScreen() {
   
         {/* Buttons in Center */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.uploadButton} onPress={() => router.push("/home/upload")}>
+          <TouchableOpacity style={styles.uploadButton} onPress={() => router.push({
+      pathname: "/home/upload",
+      params: { user },
+    })}>
             <Text style={styles.uploadButtonText}>Chat with AI</Text>
           </TouchableOpacity>
   
