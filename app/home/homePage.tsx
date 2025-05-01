@@ -3,16 +3,27 @@ import { View, FlatList, Image, TouchableOpacity, Linking, Text, StyleSheet, Scr
 import * as ImagePicker from 'expo-image-picker';
 import * as SecureStore from "expo-secure-store";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Feather } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import {
+  SafeAreaView,
+  StatusBar,
+  Dimensions,
+}from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function ImagePickerScreen() {
-  const { user } = useLocalSearchParams();
-  const userData = user ? JSON.parse(Array.isArray(user) ? user[0] : user) : null;
-  const router = useRouter();
+ 
+ 
+  const { user } = useLocalSearchParams()
+  const userData = user ? JSON.parse(Array.isArray(user) ? user[0] : user) : null
+  const router = useRouter()
+
+  // Get first name only for greeting
+  const firstName = userData?.name ? userData.name.split(" ")[0] : "User"
 
   let url = "";
   if (Platform.OS == 'web') url = 'http://localhost:3000';
-  else if (Platform.OS == 'android') url = 'http://192.168.43.112:3000';
+  else if (Platform.OS == 'android') url = 'http://10.7.30.185:3000';
 
   const [images, setImages] = useState<string[]>([]);
   const [inputText, setInputText] = useState('');
@@ -79,215 +90,310 @@ export default function ImagePickerScreen() {
   };
 
   return (
-    <ImageBackground source={require('../../assets/images/landingPageBackground.jpg')} style={styles.background}>
-      <View style={styles.container}>
-        <Text style={styles.title}>
-          Welcome to <Text style={styles.appName}>GenmedX</Text>
-        </Text>
-        <Text>Welcome, {userData?.name}</Text>
-  
-        {/* Buttons in Center */}
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.uploadButton} onPress={() => router.push({
-      pathname: "/home/upload",
-      params: { user },
-    })}>
-            <Text style={styles.uploadButtonText}>Chat with AI</Text>
-          </TouchableOpacity>
-  
-          <TouchableOpacity style={styles.optionsButton} onPress={() => router.push("/home/options")}>
-            <Text style={styles.uploadButtonText}>Go to Options</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.optionsButton} onPress={() => router.push("/home/profile")}>
-            <Text style={styles.uploadButtonText}>Profile</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" />
+      <ImageBackground source={require("../../assets/images/landingPageBackground.jpg")} style={styles.background}>
+        {/* Header Section */}
+        <View style={styles.header}>
+          <Text style={styles.greeting}>Hello, {firstName}</Text>
+          <TouchableOpacity
+            style={styles.profileIcon}
+            onPress={() =>
+              router.push({
+                pathname: "/home/profile",
+                params: { user },
+              })
+            }
+          >
+            <View style={styles.avatarCircle}>
+              <Text style={styles.avatarText}>{firstName.charAt(0)}</Text>
+            </View>
           </TouchableOpacity>
         </View>
-      </View>
-    </ImageBackground>
+
+        {/* Main Content */}
+        <View style={styles.mainContent}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.welcomeText}>Welcome to</Text>
+            <Text style={styles.appNameText}>GenmedX</Text>
+            <Text style={styles.tagline}>Your AI-powered health companion</Text>
+          </View>
+
+          {/* Health Stats Card */}
+          <View style={styles.statsCard}>
+            <View style={styles.statsHeader}>
+              <Text style={styles.statsTitle}>Health Overview</Text>
+              <TouchableOpacity>
+                <Text style={styles.seeAllText}>See All</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.statsGrid}>
+              <View style={styles.statItem}>
+                <View style={[styles.iconCircle, { backgroundColor: "rgba(255, 99, 71, 0.15)" }]}>
+                  <Feather name="heart" size={20} color="#ff6347" />
+                </View>
+                <Text style={styles.statValue}>72 bpm</Text>
+                <Text style={styles.statLabel}>Heart Rate</Text>
+              </View>
+
+              <View style={styles.statItem}>
+                <View style={[styles.iconCircle, { backgroundColor: "rgba(65, 105, 225, 0.15)" }]}>
+                  <MaterialCommunityIcons name="sleep" size={20} color="#4169e1" />
+                </View>
+                <Text style={styles.statValue}>7.5h</Text>
+                <Text style={styles.statLabel}>Sleep</Text>
+              </View>
+
+              <View style={styles.statItem}>
+                <View style={[styles.iconCircle, { backgroundColor: "rgba(50, 205, 50, 0.15)" }]}>
+                  <Ionicons name="footsteps-outline" size={20} color="#32cd32" />
+                </View>
+                <Text style={styles.statValue}>6,240</Text>
+                <Text style={styles.statLabel}>Steps</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Action Buttons */}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.chatButton}
+              onPress={() =>
+                router.push({
+                  pathname: "/home/upload",
+                  params: { user },
+                })
+              }
+            >
+              <LinearGradient
+                colors={["#ff3d00", "#f53d00", "#e53935"]}
+                style={styles.gradientButton}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Feather name="message-circle" size={22} color="#fff" style={styles.buttonIcon} />
+                <Text style={styles.buttonText}>Chat with AI</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.optionsButton} onPress={() => router.push("/home/options")}>
+              <LinearGradient
+                colors={["#1a73e8", "#0d47a1"]}
+                style={styles.gradientButton}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Feather name="settings" size={22} color="#fff" style={styles.buttonIcon} />
+                <Text style={styles.buttonText}>Go to Options</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.profileButton} onPress={() => router.push("/home/profile")}>
+              <LinearGradient
+                colors={["#1a73e8", "#0d47a1"]}
+                style={styles.gradientButton}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Feather name="user" size={22} color="#fff" style={styles.buttonIcon} />
+                <Text style={styles.buttonText}>Profile</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Floating Action Button */}
+        {/* <TouchableOpacity
+          style={styles.fab}
+          onPress={() =>
+            router.push({
+              pathname: "/home/upload",
+              params: { user },
+            })
+          }
+        >
+          <Feather name="plus" size={24} color="white" />
+        </TouchableOpacity> */}
+      </ImageBackground>
+    </SafeAreaView>
   );}
   
 
   const styles = StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    },
     background: {
       flex: 1,
-      width: '100%',
-      height: '100%',
-      resizeMode: 'cover',
-      justifyContent: 'center',
-      alignItems: 'center',
+      width: "100%",
+      height: "100%",
     },
-    container: {
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: 20,
+      paddingTop: 20,
+      paddingBottom: 10,
+    },
+    greeting: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: "#333",
+    },
+    profileIcon: {
+      padding: 5,
+    },
+    avatarCircle: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: "#1a73e8",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    avatarText: {
+      color: "white",
+      fontSize: 18,
+      fontWeight: "bold",
+    },
+    mainContent: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      paddingHorizontal: 20,
+      justifyContent: "center",
+    },
+    titleContainer: {
+      marginBottom: 30,
+      alignItems: "center",
+    },
+    welcomeText: {
+      fontSize: 24,
+      fontWeight: "bold",
+      color: "#5b21b6",
+      textAlign: "center",
+    },
+    appNameText: {
+      fontSize: 36,
+      fontWeight: "bold",
+      color: "#f53d00",
+      textAlign: "center",
+      marginVertical: 5,
+    },
+    tagline: {
+      fontSize: 16,
+      color: "#666",
+      textAlign: "center",
+      marginTop: 5,
+    },
+    statsCard: {
+      backgroundColor: "rgba(255, 255, 255, 0.9)",
+      borderRadius: 16,
       padding: 20,
+      marginBottom: 30,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 5,
     },
-    title: {
-      fontSize: 28,
-      fontWeight: 'bold',
-      color: 'blue',
-      marginBottom: 10,
+    statsHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 15,
     },
-    appName: {
-      fontSize: 28,
-      fontWeight: 'bold',
-      color: '#f53d00',
+    statsTitle: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: "#333",
+    },
+    seeAllText: {
+      fontSize: 14,
+      color: "#1a73e8",
+      fontWeight: "500",
+    },
+    statsGrid: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    statItem: {
+      alignItems: "center",
+      width: "30%",
+    },
+    iconCircle: {
+      width: 45,
+      height: 45,
+      borderRadius: 22.5,
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 8,
+    },
+    statValue: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: "#333",
+      marginBottom: 4,
+    },
+    statLabel: {
+      fontSize: 12,
+      color: "#666",
     },
     buttonContainer: {
-      marginTop: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: 16,
+      width: "100%",
+      alignItems: "center",
+      gap: 15,
     },
-    uploadButton: {
-      backgroundColor: '#f53d00',
-      paddingVertical: 14,
-      paddingHorizontal: 30,
-      borderRadius: 10,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 3,
-      elevation: 4,
+    chatButton: {
+      width: "100%",
+      height: 55,
+      borderRadius: 12,
+      overflow: "hidden",
     },
     optionsButton: {
-      backgroundColor: '#007AFF',
-      paddingVertical: 14,
-      paddingHorizontal: 30,
-      borderRadius: 10,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 3,
-      elevation: 4,
+      width: "100%",
+      height: 55,
+      borderRadius: 12,
+      overflow: "hidden",
     },
-    uploadButtonText: {
-      color: '#fff',
-      fontSize: 16,
-      fontWeight: 'bold',
+    profileButton: {
+      width: "100%",
+      height: 55,
+      borderRadius: 12,
+      overflow: "hidden",
+      marginBottom: 20,
     },
-  
-    wrapper: {
-      flexDirection: 'row',
-      width: '100%',
-      height: '70%',
-      marginVertical: 20,
-    },
-    files: {
-      width: '20%',
-      padding: 10,
-      borderWidth: 1,
-      borderColor: '#f53d00',
-      backgroundColor: '#f9f9f9',
-      borderRightWidth: 4,
-      borderRightColor: '#f53d00',
-      borderRadius: 10,
-      height: '90%',
-    },
-    chat: {
-      width: '80%',
-      paddingLeft: 10,
-      paddingRight: 10,
-      height: '100%',
-    },
-    sectionTitle: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: '#f53d00',
-      marginBottom: 10,
-    },
-    fileListContainer: {
-      paddingBottom: 20,
-    },
-    fileItem: {
-      paddingVertical: 12,
-      paddingHorizontal: 10,
-      borderBottomWidth: 1,
-      borderBottomColor: '#ddd',
-    },
-    fileText: {
-      fontSize: 16,
-      color: '#333',
-    },
-    chatContainer: {
+    gradientButton: {
       flex: 1,
-      width: '100%',
-      maxHeight: 400,
-      marginBottom: 10,
-      padding: 10,
-      backgroundColor: '#f0f0f0',
-      borderColor: 'blue',
-      borderWidth: 1,
-      borderRadius: 10,
-      height: '100%',
-    },
-    message: {
-      padding: 10,
-      borderRadius: 10,
-      marginVertical: 5,
-      maxWidth: '70%',
-    },
-    userMessage: {
-      alignSelf: 'flex-end',
-      backgroundColor: '#007AFF',
-    },
-    aiMessage: {
-      alignSelf: 'flex-start',
-      backgroundColor: '#fa6b3c',
-    },
-    messageText: {
-      color: 'white',
-      fontSize: 16,
-    },
-    inputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      width: '100%',
-      marginTop: 10,
-    },
-    inputBox: {
-      flex: 1,
-      height: 50,
-      borderColor: '#ccc',
-      borderWidth: 2,
-      borderRadius: 10,
-      paddingHorizontal: 10,
-      backgroundColor: 'white',
-    },
-    sendButton: {
-      marginLeft: 10,
-      backgroundColor: 'blue',
-      paddingVertical: 12,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
       paddingHorizontal: 20,
-      borderRadius: 10,
     },
-    button: {
-      marginLeft: 10,
-      backgroundColor: 'blue',
-      paddingVertical: 12,
-      paddingHorizontal: 20,
-      borderRadius: 10,
+    buttonIcon: {
+      marginRight: 10,
     },
     buttonText: {
-      color: 'white',
+      color: "#fff",
       fontSize: 16,
-      fontWeight: 'bold',
+      fontWeight: "600",
+      
     },
     fab: {
-      position: 'absolute',
+      position: "absolute",
       width: 60,
       height: 60,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       right: 20,
       bottom: 20,
-      backgroundColor: '#4CAF50',
+      backgroundColor: "#f53d00",
       borderRadius: 30,
       elevation: 8,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.3,
-      shadowRadius: 3,
+      shadowRadius: 5,
     },
-  });
-  
+  })

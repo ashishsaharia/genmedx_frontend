@@ -13,8 +13,7 @@ const { user } = useLocalSearchParams();
 
   let url = "";
   if (Platform.OS == 'web') url = 'http://localhost:3000';
-  else if (Platform.OS == 'android') url = 'http://192.168.43.112:3000';
-
+  else if (Platform.OS == 'android') url = 'http://10.7.30.185:3000';
   const [images, setImages] = useState<string[]>([]);
   const [inputText, setInputText] = useState('');
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
@@ -158,6 +157,7 @@ const { user } = useLocalSearchParams();
     </Modal>
 
     {/* Main Content */}
+      <ImageBackground source={require("../../assets/images/landingPageBackground.jpg")} style={styles.background}>
     <View style={{ flex: 1, padding: 20 }}>
       <Text style={{
         fontSize: 28,
@@ -172,15 +172,15 @@ const { user } = useLocalSearchParams();
         marginBottom: 10,
         fontSize: 14,
         color: '#333',
+        // fontWeight: '600',
       }}>
-        I know everything about your medical history.
-      </Text>
+Your complete medical history, just a question away.      </Text>
 
       <ScrollView style={{
         flex: 1,
         borderWidth: 1,
         borderColor: '#6a0dad',
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#b0b0b04D',
         borderRadius: 10,
         padding: 10,
         marginVertical: 15,
@@ -247,7 +247,9 @@ const { user } = useLocalSearchParams();
 
       </View>
     </View>
+      </ImageBackground>
   </View>
+
 
 
   )
