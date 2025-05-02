@@ -205,18 +205,18 @@ export default function ImagePickerScreen() {
           </View>
         </View>
 
-        {/* Floating Action Button */}
-        {/* <TouchableOpacity
+      {/*  Floating Action Button */}
+        <TouchableOpacity
           style={styles.fab}
           onPress={() =>
             router.push({
-              pathname: "/home/upload",
+              pathname: "/home/activitydata",
               params: { user },
             })
           }
         >
           <Feather name="plus" size={24} color="white" />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </ImageBackground>
     </SafeAreaView>
   );}

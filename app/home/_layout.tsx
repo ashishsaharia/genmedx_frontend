@@ -8,7 +8,9 @@ export default function RootLayout()
         <Stack.Screen name="options" options={{title: "Options"}}></Stack.Screen>
         <Stack.Screen name="upload" options={{title: "Uploadfile"}}></Stack.Screen>
         <Stack.Screen name="profile" options={{title: "Profile"}}></Stack.Screen>
-
+        <Stack.Screen name="activity" options={{title: "activity"}}></Stack.Screen>
         <Stack.Screen name="medicalInfo" options={{title: "Medical Information"}}></Stack.Screen>
+        <Stack.Screen name="useronboarding" options={{title: "User Onboarding"}}></Stack.Screen>
+
     </Stack>)
 }

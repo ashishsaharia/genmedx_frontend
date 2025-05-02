@@ -13,19 +13,20 @@ import {
 import { useRouter } from "expo-router"
 import { Feather } from "@expo/vector-icons"
 
-export default function MedicalInfoForm() {
-  const [medicineName, setMedicineName] = useState("")
-  const [cause, setCause] = useState("")
+export default function HealthMetricsForm() {
+  const [steps, setSteps] = useState("")
+  const [bloodPressure, setBloodPressure] = useState("")
+  const [sleepHours, setSleepHours] = useState("")
   const router = useRouter()
 
   const handleSubmit = () => {
-    if (!medicineName.trim() || !cause.trim()) {
+    if (!steps.trim() || !bloodPressure.trim() || !sleepHours.trim()) {
       Alert.alert("Error", "Please fill in all fields")
       return
     }
 
     // Here you would typically save the data to a database or state management
-    Alert.alert("Success", "Medical information saved successfully", [
+    Alert.alert("Success", "Health metrics saved successfully", [
       {
         text: "OK",
         onPress: () => router.back(),
@@ -36,45 +37,46 @@ export default function MedicalInfoForm() {
   return (
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
-        <Text style={styles.title}>Upload Medical Information</Text>
-        <Text style={styles.subtitle}>Please enter the details below</Text>
+        <Text style={styles.title}>Daily Health Metrics</Text>
+        <Text style={styles.subtitle}>Please enter your health data below</Text>
 
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Medicine Name</Text>
+          <Text style={styles.label}>Steps</Text>
           <View style={styles.inputContainer}>
-            <Feather name="box" size={20} color="#666" style={styles.inputIcon} />
+            <Feather name="activity" size={20} color="#666" style={styles.inputIcon} />
             <TextInput
               style={styles.input}
-              placeholder="Enter medicine name"
-              value={medicineName}
-              onChangeText={setMedicineName}
+              placeholder="Enter number of steps"
+              value={steps}
+              onChangeText={setSteps}
+              keyboardType="numeric"
             />
           </View>
         </View>
 
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Cause / Reason</Text>
+          <Text style={styles.label}>Blood Pressure</Text>
           <View style={styles.inputContainer}>
-            <Feather name="file-text" size={20} color="#666" style={styles.inputIcon} />
+            <Feather name="heart" size={20} color="#666" style={styles.inputIcon} />
             <TextInput
               style={styles.input}
-              placeholder="Enter cause or reason for medicine"
-              value={cause}
-              onChangeText={setCause}
-              multiline
+              placeholder="Enter BP (e.g., 120/80)"
+              value={bloodPressure}
+              onChangeText={setBloodPressure}
             />
           </View>
         </View>
+
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Repeat Period</Text>
+          <Text style={styles.label}>Sleep (hours)</Text>
           <View style={styles.inputContainer}>
-            <Feather name="file-text" size={20} color="#666" style={styles.inputIcon} />
+            <Feather name="moon" size={20} color="#666" style={styles.inputIcon} />
             <TextInput
               style={styles.input}
-              placeholder="In how many days you repeat this medicine"
-              value={cause}
-              onChangeText={setCause}
-              multiline
+              placeholder="Enter sleep duration in hours"
+              value={sleepHours}
+              onChangeText={setSleepHours}
+              keyboardType="decimal-pad"
             />
           </View>
         </View>
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   submitButton: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#f53d00",
     borderRadius: 8,
     padding: 15,
     alignItems: "center",
@@ -142,5 +144,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "600",
+    // backgroundColor:"#f53d00"
   },
 })

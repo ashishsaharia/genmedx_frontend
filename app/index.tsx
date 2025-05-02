@@ -107,7 +107,7 @@ export default function Index() {
 
   if (isAuthenticated) {
     router.replace({
-      pathname: "/home/homePage",
+      pathname: "/home/useronboarding",
       params: { user: JSON.stringify(decodedIdToken) },
     });
   }

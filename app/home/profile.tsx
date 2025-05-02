@@ -22,6 +22,7 @@ export default function ProfileScreen() {
   const [userData, setUserData] = useState<any>({})
   const [loading, setLoading] = useState(true)
   
+  const firstName = userData?.name ? userData.name.split(" ")[0] : "User"
   // Mock medical conditions - in a real app, these would come from an API or storage
   const [medicalConditions, setMedicalConditions] = useState([
     { id: 1, name: "Hypertension", severity: "Moderate", dateAdded: "2023-05-15" },
@@ -108,7 +109,7 @@ export default function ProfileScreen() {
           </View>
           
           <Text style={styles.userName}>
-            {userData.given_name || "User"} {userData.family_name || ""}
+          {firstName}
           </Text>
           
           <View style={styles.infoCard}>
