@@ -5,6 +5,7 @@ import * as SecureStore from "expo-secure-store";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from '@expo/vector-icons';
+import { populateParams } from 'expo-router/build/fork/getStateFromPath-forks';
 
 export default function UploadFile() {
 const { user } = useLocalSearchParams();
@@ -13,21 +14,22 @@ const { user } = useLocalSearchParams();
 
   let url = "";
   if (Platform.OS == 'web') url = 'http://localhost:3000';
-  else if (Platform.OS == 'android') url = 'http://10.7.30.185:3000';
+  else if (Platform.OS == 'android') url = 'http://10.7.14.19:3000';
   const [images, setImages] = useState<string[]>([]);
   const [inputText, setInputText] = useState('');
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
   const [files, setFiles] = useState<string[]>([]);
 
 
-  console.log(userData.email);
-  
-  useEffect(() => {
-    fetch(`${url}/uploads/${userData.email}`)
-      .then((res) => res.json())
-      .then((data) => setFiles(data))
-      .catch((err) => console.error(err));
-  }, [files]);
+  // console.log(userData.email);
+ useEffect(() => {
+  // const platform = navigator.platform; // or use navigator.userAgentData.platform if needed
+
+  fetch(`${url}/uploads/${userData.email}?platform=${Platform.OS}`)
+    .then((res) => res.json())
+    .then((data) => setFiles(data))
+    .catch((err) => console.error(err));
+}, [files]);
 
 
   const [sidebarVisible, setSidebarVisible] = useState(false);

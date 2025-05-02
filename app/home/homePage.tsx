@@ -23,19 +23,21 @@ export default function ImagePickerScreen() {
 
   let url = "";
   if (Platform.OS == 'web') url = 'http://localhost:3000';
-  else if (Platform.OS == 'android') url = 'http://10.7.30.185:3000';
+  else if (Platform.OS == 'android') url = 'http://10.7.14.19:3000';
 
   const [images, setImages] = useState<string[]>([]);
   const [inputText, setInputText] = useState('');
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
   const [files, setFiles] = useState<string[]>([]);
 
-  useEffect(() => {
-    fetch(`${url}/uploads/${userData.email}`)
-      .then((res) => res.json())
-      .then((data) => setFiles(data))
-      .catch((err) => console.error(err));
-  }, [files]);
+   useEffect(() => {
+  // const platform = navigator.platform; // or use navigator.userAgentData.platform if needed
+
+  fetch(`${url}/uploads/${userData.email}?platform=${Platform.OS}`)
+    .then((res) => res.json())
+    .then((data) => setFiles(data))
+    .catch((err) => console.error(err));
+}, [files]);
 
   const openFile = async (fileUrl: string) => {
     Linking.openURL(fileUrl);

@@ -24,7 +24,7 @@ let CLIENT_SECRET = "w7AnnMlXO8w6JUX1zyBMoXP5A8TKuj2nmhqwM5rsr10a";
 let CLIENT_ID = "EEkeq5vwFe2Ue0Ieca5anfXx7JQa";
 if (Platform.OS == "android") {
   redirectUri = AuthSession.makeRedirectUri();
-  CLIENT_ID = "EEkeq5vwFe2Ue0Ieca5anfXx7JQa";
+  CLIENT_ID = "QYk2nCbltfd5f9TsNpC5m2icK18a";
 } else if (Platform.OS == "web") {
   CLIENT_ID = "Mj4BD1X2Rv3reU48BsHuxLV0aLka";
 }
