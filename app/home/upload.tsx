@@ -62,6 +62,12 @@ const { user } = useLocalSearchParams();
       });
       const data = await response.json();
       console.log('Upload success:', data);
+
+      fetch(`${url}/uploads/${userData.email}?platform=${Platform.OS}`)
+    .then((res) => res.json())
+    .then((data) => setFiles(data))
+    .catch((err) => console.error(err)); 
+    
     } catch (error) {
       console.error('Upload error:', error);
     }
