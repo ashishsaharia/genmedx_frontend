@@ -7,6 +7,12 @@ import {
   Alert,
   Platform,
 } from "react-native";
+
+let url = Platform.OS === "web" ? "http://localhost:3000" : "http://10.7.14.19:3000";
+
+
+
+
 import { Link } from "expo-router";
 import { useRouter } from "expo-router";
 import { Button } from "@react-navigation/elements";
@@ -33,6 +39,7 @@ export default function Index() {
   const discovery = AuthSession.useAutoDiscovery(
     "https://api.asgardeo.io/t/genmedx/oauth2/token"
   );
+  const [userEmail, setUserEmail] = useState("");
   const [tokenResponse, setTokenResponse] = useState({});
   const [decodedIdToken, setDecodedIdToken] = useState({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -72,8 +79,12 @@ export default function Index() {
           return response.json();
         })
         .then((data) => {
+          let obj = jwtDecode(data.id_token);
           setTokenResponse(data);
           setDecodedIdToken(jwtDecode(data.id_token));
+          console.log(obj.email);
+          setUserEmail(obj.email);
+          console.log("hi there");
           console.log(jwtDecode(data.id_token));
           // console.log(data);
           setIsAuthenticated(true);
@@ -83,6 +94,19 @@ export default function Index() {
         });
     }
   };
+
+  const checkIfUserExists = async () => {
+    try {
+      const response = await fetch(`http://${url}/check-user/${userEmail}`);
+      const data = await response.json();
+      return data.exists;
+    } catch (error) {
+      console.error("Error checking user:", error);
+      return false;
+    }
+  };
+
+
 
   useEffect(() => {
     (async function setResult() {
@@ -106,9 +130,11 @@ export default function Index() {
   }, [result]);
 
   if (isAuthenticated) {
-    router.replace({
-      pathname: "/home/useronboarding",
-      params: { user: JSON.stringify(decodedIdToken) },
+    checkIfUserExists().then((exists) => {
+      router.replace({
+        pathname: exists ? "/home/homePage" : "/home/useronboarding",
+        params: { user: JSON.stringify(decodedIdToken) },
+      });
     });
   }
 

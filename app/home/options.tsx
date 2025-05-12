@@ -1,22 +1,31 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
-import { Link } from "expo-router"
+import { Link, useRouter, useLocalSearchParams } from "expo-router"
 import { Feather } from "@expo/vector-icons"
 
 export default function OptionsScreen() {
+  const router = useRouter();
+
+    const { user } = useLocalSearchParams()
+  
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Select an Option</Text>
+      <TouchableOpacity
+  style={styles.button}
+  onPress={() => router.replace({
+                  pathname: "/home/medicalInfo",
+                  params:  {user},
+                })}
+>
+  <Feather name="file-plus" size={24} color="#4CAF50" style={styles.buttonIcon} />
+  <View>
+    <Text style={styles.buttonText}>Upload Medical Info</Text>
+    <Text style={styles.buttonSubtext}>Add medicine and cause information</Text>
+  </View>
+  <Feather name="chevron-right" size={24} color="#999" />
+</TouchableOpacity>
 
-      <Link href="./medicalInfo" asChild>
-        <TouchableOpacity style={styles.button}>
-          <Feather name="file-plus" size={24} color="#4CAF50" style={styles.buttonIcon} />
-          <View>
-            <Text style={styles.buttonText}>Upload Medical Info</Text>
-            <Text style={styles.buttonSubtext}>Add medicine and cause information</Text>
-          </View>
-          <Feather name="chevron-right" size={24} color="#999" />
-        </TouchableOpacity>
-      </Link>
 
       <TouchableOpacity style={styles.button}>
         <Feather name="list" size={24} color="#2196F3" style={styles.buttonIcon} />

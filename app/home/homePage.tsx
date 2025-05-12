@@ -179,7 +179,10 @@ export default function ImagePickerScreen() {
               </LinearGradient>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.optionsButton} onPress={() => router.push("/home/options")}>
+            <TouchableOpacity style={styles.optionsButton} onPress={() => router.replace({
+                  pathname: "/home/options",
+                  params:  {user},
+                })}>
               <LinearGradient
                 colors={["#1a73e8", "#0d47a1"]}
                 style={styles.gradientButton}

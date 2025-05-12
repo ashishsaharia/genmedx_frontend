@@ -10,28 +10,57 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native"
-import { useRouter } from "expo-router"
+import { useRouter, useLocalSearchParams } from "expo-router"
 import { Feather } from "@expo/vector-icons"
 
 export default function MedicalInfoForm() {
+    const { user } = useLocalSearchParams();
   const [medicineName, setMedicineName] = useState("")
   const [cause, setCause] = useState("")
+  const [period, setperiod] = useState("")
   const router = useRouter()
 
-  const handleSubmit = () => {
-    if (!medicineName.trim() || !cause.trim()) {
-      Alert.alert("Error", "Please fill in all fields")
-      return
-    }
-
-    // Here you would typically save the data to a database or state management
-    Alert.alert("Success", "Medical information saved successfully", [
-      {
-        text: "OK",
-        onPress: () => router.back(),
-      },
-    ])
+  const userData = user
+    ? JSON.parse(Array.isArray(user) ? user[0] : user)
+    : null;
+  let url =
+    Platform.OS === "web" ? "http://localhost:3000" : "http://10.7.14.19:3000";
+ const handleSubmit = async () => {
+  if (!medicineName.trim() || !cause.trim()) {
+    Alert.alert("Error", "Please fill in all fields");
+    return;
   }
+
+  try {
+    const response = await fetch(`${url}/add-medicine`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userEmail: userData.email, // Replace with the actual user email
+        name: medicineName,
+        cause: cause,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      Alert.alert("Success", "Medical information saved successfully", [
+        {
+          text: "OK",
+          onPress: () => router.back(),
+        },
+      ]);
+    } else {
+      Alert.alert("Error", data.error || "Something went wrong");
+    }
+  } catch (error) {
+    console.error("Error submitting medical info:", error);
+    Alert.alert("Error", "Network error. Please try again.");
+  }
+};
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
@@ -72,8 +101,8 @@ export default function MedicalInfoForm() {
             <TextInput
               style={styles.input}
               placeholder="In how many days you repeat this medicine"
-              value={cause}
-              onChangeText={setCause}
+              value={period}
+              onChangeText={setperiod}
               multiline
             />
           </View>

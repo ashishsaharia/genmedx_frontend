@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from "react";
 import {
   View,
   Text,
@@ -9,29 +9,70 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-} from "react-native"
-import { useRouter } from "expo-router"
-import { Feather } from "@expo/vector-icons"
+} from "react-native";
+import { useRouter } from "expo-router";
+import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useLocalSearchParams} from "expo-router";
-
-
+import { useLocalSearchParams } from "expo-router";
 
 export default function UserOnboarding() {
-    const { user } = useLocalSearchParams()
-  const [name, setName] = useState("")
-  const [phoneNumber, setPhoneNumber] = useState("")
-  const [age, setAge] = useState("")
-  const [gender, setGender] = useState("")
-  const [height, setHeight] = useState("")
-  const [weight, setWeight] = useState("")
-  const [medicalHistory, setMedicalHistory] = useState("")
-  const [emergencyContact, setEmergencyContact] = useState("")
-  const [allergies, setAllergies] = useState("")
-  
-  const router = useRouter()
+  const { user } = useLocalSearchParams();
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [medicalHistory, setMedicalHistory] = useState("");
+  const [emergencyContact, setEmergencyContact] = useState("");
+  const [allergies, setAllergies] = useState("");
 
-  const handleSubmit = () => {
+  const userData = user
+    ? JSON.parse(Array.isArray(user) ? user[0] : user)
+    : null;
+  let url =
+    Platform.OS === "web" ? "http://localhost:3000" : "http://10.7.14.19:3000";
+
+  const router = useRouter();
+
+  const handleSubmit = async () => {
+    if (!userData?.email) {
+      Alert.alert("Error", "User email not found.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${url}/onboarding`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userEmail: userData.email,
+          fullName: name,
+          phoneNumber: Number(phoneNumber),
+          userAge: age,
+          userGender: gender,
+          userHeight: Number(height),
+          userWeight: Number(weight),
+          userMedicalCondition: medicalHistory,
+          userAlergies: allergies,
+          userEmergencyContact: Number(emergencyContact),
+        }),
+      });
+
+      // const data = await response.json();
+
+      if(response.ok) {
+              router.replace({
+                        pathname: "/home/homePage",
+                        params: { user },
+                      })
+      }
+    } catch (error) {
+      console.error("Onboarding error:", error);
+      Alert.alert("Error", "Network error. Please try again.");
+    }
     // Basic validation
     // if (!name.trim() || !phoneNumber.trim() || !age.trim() || !gender || !height.trim() || !weight.trim()) {
     //   Alert.alert("Error", "Please fill in all required fields")
@@ -42,22 +83,34 @@ export default function UserOnboarding() {
     // Alert.alert("Success", "Profile created successfully", [
     //   {
     //     text: "Continue",
-        onPress: () => router.push("/home/homePage") // Navigate to dashboard or home screen
+    // onPress: () => router.push("/home/homePage"); // Navigate to dashboard or home screen
     //   },
     // ])
-  }
+  };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
       <ScrollView style={styles.container}>
         <Text style={styles.title}>Create Your Health Profile</Text>
-        <Text style={styles.subtitle}>Please provide your information to get started</Text>
+        <Text style={styles.subtitle}>
+          Please provide your information to get started
+        </Text>
 
         {/* Name */}
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Full Name <Text style={styles.required}>*</Text></Text>
+          <Text style={styles.label}>
+            Full Name <Text style={styles.required}>*</Text>
+          </Text>
           <View style={styles.inputContainer}>
-            <Feather name="user" size={20} color="#666" style={styles.inputIcon} />
+            <Feather
+              name="user"
+              size={20}
+              color="#666"
+              style={styles.inputIcon}
+            />
             <TextInput
               style={styles.input}
               placeholder="Enter your full name"
@@ -69,9 +122,16 @@ export default function UserOnboarding() {
 
         {/* Phone Number */}
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Phone Number <Text style={styles.required}>*</Text></Text>
+          <Text style={styles.label}>
+            Phone Number <Text style={styles.required}>*</Text>
+          </Text>
           <View style={styles.inputContainer}>
-            <Feather name="phone" size={20} color="#666" style={styles.inputIcon} />
+            <Feather
+              name="phone"
+              size={20}
+              color="#666"
+              style={styles.inputIcon}
+            />
             <TextInput
               style={styles.input}
               placeholder="Enter your phone number"
@@ -84,9 +144,16 @@ export default function UserOnboarding() {
 
         {/* Age */}
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Age <Text style={styles.required}>*</Text></Text>
+          <Text style={styles.label}>
+            Age <Text style={styles.required}>*</Text>
+          </Text>
           <View style={styles.inputContainer}>
-            <Feather name="calendar" size={20} color="#666" style={styles.inputIcon} />
+            <Feather
+              name="calendar"
+              size={20}
+              color="#666"
+              style={styles.inputIcon}
+            />
             <TextInput
               style={styles.input}
               placeholder="Enter your age"
@@ -100,34 +167,73 @@ export default function UserOnboarding() {
 
         {/* Gender Selection */}
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Gender <Text style={styles.required}>*</Text></Text>
+          <Text style={styles.label}>
+            Gender <Text style={styles.required}>*</Text>
+          </Text>
           <View style={styles.genderContainer}>
             <TouchableOpacity
-              style={[styles.genderButton, gender === "Male" && styles.genderButtonActive]}
+              style={[
+                styles.genderButton,
+                gender === "Male" && styles.genderButtonActive,
+              ]}
               onPress={() => setGender("Male")}
             >
-              <Text style={[styles.genderButtonText, gender === "Male" && styles.genderButtonTextActive]}>Male</Text>
+              <Text
+                style={[
+                  styles.genderButtonText,
+                  gender === "Male" && styles.genderButtonTextActive,
+                ]}
+              >
+                Male
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.genderButton, gender === "Female" && styles.genderButtonActive]}
+              style={[
+                styles.genderButton,
+                gender === "Female" && styles.genderButtonActive,
+              ]}
               onPress={() => setGender("Female")}
             >
-              <Text style={[styles.genderButtonText, gender === "Female" && styles.genderButtonTextActive]}>Female</Text>
+              <Text
+                style={[
+                  styles.genderButtonText,
+                  gender === "Female" && styles.genderButtonTextActive,
+                ]}
+              >
+                Female
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.genderButton, gender === "Other" && styles.genderButtonActive]}
+              style={[
+                styles.genderButton,
+                gender === "Other" && styles.genderButtonActive,
+              ]}
               onPress={() => setGender("Other")}
             >
-              <Text style={[styles.genderButtonText, gender === "Other" && styles.genderButtonTextActive]}>Other</Text>
+              <Text
+                style={[
+                  styles.genderButtonText,
+                  gender === "Other" && styles.genderButtonTextActive,
+                ]}
+              >
+                Other
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
 
         {/* Height */}
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Height (cm) <Text style={styles.required}>*</Text></Text>
+          <Text style={styles.label}>
+            Height (cm) <Text style={styles.required}>*</Text>
+          </Text>
           <View style={styles.inputContainer}>
-            <Feather name="arrow-up" size={20} color="#666" style={styles.inputIcon} />
+            <Feather
+              name="arrow-up"
+              size={20}
+              color="#666"
+              style={styles.inputIcon}
+            />
             <TextInput
               style={styles.input}
               placeholder="Enter your height in cm"
@@ -140,9 +246,16 @@ export default function UserOnboarding() {
 
         {/* Weight */}
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Weight (kg) <Text style={styles.required}>*</Text></Text>
+          <Text style={styles.label}>
+            Weight (kg) <Text style={styles.required}>*</Text>
+          </Text>
           <View style={styles.inputContainer}>
-            <Feather name="anchor" size={20} color="#666" style={styles.inputIcon} />
+            <Feather
+              name="anchor"
+              size={20}
+              color="#666"
+              style={styles.inputIcon}
+            />
             <TextInput
               style={styles.input}
               placeholder="Enter your weight in kg"
@@ -172,7 +285,12 @@ export default function UserOnboarding() {
         <View style={styles.formGroup}>
           <Text style={styles.label}>Allergies</Text>
           <View style={styles.inputContainer}>
-            <Feather name="alert-circle" size={20} color="#666" style={styles.inputIcon} />
+            <Feather
+              name="alert-circle"
+              size={20}
+              color="#666"
+              style={styles.inputIcon}
+            />
             <TextInput
               style={styles.input}
               placeholder="List any allergies you have"
@@ -186,7 +304,12 @@ export default function UserOnboarding() {
         <View style={styles.formGroup}>
           <Text style={styles.label}>Emergency Contact</Text>
           <View style={styles.inputContainer}>
-            <Feather name="phone-call" size={20} color="#666" style={styles.inputIcon} />
+            <Feather
+              name="phone-call"
+              size={20}
+              color="#666"
+              style={styles.inputIcon}
+            />
             <TextInput
               style={styles.input}
               placeholder="Name and phone number of emergency contact"
@@ -196,23 +319,25 @@ export default function UserOnboarding() {
           </View>
         </View>
 
-       <TouchableOpacity style={styles.profileButton} onPress={() => router.replace({
-             pathname: "/home/homePage",
-             params: { user},
-           })}>
-                     <LinearGradient
-                       colors={["#1a73e8", "#0d47a1"]}
-                       style={styles.gradientButton}
-                       start={{ x: 0, y: 0 }}
-                       end={{ x: 1, y: 0 }}
-                     >
-                       <Feather name="user" size={22} color="#fff" style={styles.buttonIcon} />
-                       <Text style={styles.buttonText}>Create Profile</Text>
-                     </LinearGradient>
-                   </TouchableOpacity>
+        <TouchableOpacity style={styles.profileButton} onPress={handleSubmit}>
+          <LinearGradient
+            colors={["#1a73e8", "#0d47a1"]}
+            style={styles.gradientButton}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+          >
+            <Feather
+              name="user"
+              size={22}
+              color="#fff"
+              style={styles.buttonIcon}
+            />
+            <Text style={styles.buttonText}>Create Profile</Text>
+          </LinearGradient>
+        </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -275,7 +400,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "600",
-    
   },
   textArea: {
     height: 100,
@@ -353,4 +477,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
   },
-})
+});
