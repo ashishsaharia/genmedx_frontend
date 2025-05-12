@@ -82,10 +82,10 @@ export default function Index() {
           let obj = jwtDecode(data.id_token);
           setTokenResponse(data);
           setDecodedIdToken(jwtDecode(data.id_token));
-          console.log(obj.email);
+          // console.log(obj.email);
           setUserEmail(obj.email);
-          console.log("hi there");
-          console.log(jwtDecode(data.id_token));
+          // console.log("hi there");
+          // console.log(jwtDecode(data.id_token));
           // console.log(data);
           setIsAuthenticated(true);
         })
@@ -97,8 +97,11 @@ export default function Index() {
 
   const checkIfUserExists = async () => {
     try {
-      const response = await fetch(`http://${url}/check-user/${userEmail}`);
+      console.log("Checking if user exists with email:", userEmail);
+      const response = await fetch(`${url}/check-user/${userEmail}`);
+      console.log("response:", response);
       const data = await response.json();
+      console.log("User exists response:", data);
       return data.exists;
     } catch (error) {
       console.error("Error checking user:", error);
@@ -129,14 +132,25 @@ export default function Index() {
     })();
   }, [result]);
 
-  if (isAuthenticated) {
-    checkIfUserExists().then((exists) => {
-      router.replace({
-        pathname: exists ? "/home/homePage" : "/home/useronboarding",
-        params: { user: JSON.stringify(decodedIdToken) },
+  useEffect(() => {
+    if (isAuthenticated) {
+      checkIfUserExists().then((exists) => {
+        console.log("User exists:", exists);
+        router.replace({
+          pathname: exists ? "/home/homePage" : "/home/useronboarding",
+          params: { user: JSON.stringify(decodedIdToken) },
+        });
       });
-    });
-  }
+    }
+  }, [isAuthenticated]);
+  // if (isAuthenticated) {
+  //   checkIfUserExists().then((exists) => {
+  //     router.replace({
+  //       pathname: exists ? "/home/homePage" : "/home/useronboarding",
+  //       params: { user: JSON.stringify(decodedIdToken) },
+  //     });
+  //   });
+  // }
 
   return (
     <ImageBackground

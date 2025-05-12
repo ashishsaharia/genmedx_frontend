@@ -31,7 +31,8 @@ export default function MedicalInfoForm() {
     return;
   }
 
-  try {
+  try { 
+   
     const response = await fetch(`${url}/add-medicine`, {
       method: "POST",
       headers: {
@@ -41,6 +42,7 @@ export default function MedicalInfoForm() {
         userEmail: userData.email, // Replace with the actual user email
         name: medicineName,
         cause: cause,
+        repeatperiod: period,
       }),
     });
 
@@ -63,6 +65,7 @@ export default function MedicalInfoForm() {
 };
 
   return (
+    
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
         <Text style={styles.title}>Upload Medical Information</Text>

@@ -31,7 +31,7 @@ const { user } = useLocalSearchParams();
     .catch((err) => console.error(err));
 }, [files]);
 
-
+console.log("Files: ", files);
   const [sidebarVisible, setSidebarVisible] = useState(false);
 
   const openFile = async (fileUrl: string) => {
