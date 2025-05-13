@@ -37,7 +37,7 @@ export default function ImagePickerScreen() {
     .then((res) => res.json())
     .then((data) => setFiles(data))
     .catch((err) => console.error(err));
-}, [files]);
+}, []);
 
   const openFile = async (fileUrl: string) => {
     Linking.openURL(fileUrl);
@@ -179,7 +179,7 @@ export default function ImagePickerScreen() {
               </LinearGradient>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.optionsButton} onPress={() => router.replace({
+            <TouchableOpacity style={styles.optionsButton} onPress={() => router.push({
                   pathname: "/home/options",
                   params:  {user},
                 })}>

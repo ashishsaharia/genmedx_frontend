@@ -29,9 +29,9 @@ const { user } = useLocalSearchParams();
     .then((res) => res.json())
     .then((data) => setFiles(data))
     .catch((err) => console.error(err));
-}, [files]);
+}, []);
 
-console.log("Files: ", files);
+// console.log("Files: ", files);
   const [sidebarVisible, setSidebarVisible] = useState(false);
 
   const openFile = async (fileUrl: string) => {

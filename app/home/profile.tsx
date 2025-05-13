@@ -67,7 +67,7 @@ export default function ProfileScreen() {
               // Clear any auth tokens or session data
               await AuthSession.revokeAsync(
                 {
-                  token: "your-token-here", // Replace with actual token
+                  token: "w7AnnMlXO8w6JUX1zyBMoXP5A8TKuj2nmhqwM5rsr10a", // Replace with actual token
                 },
                 {
                   revocationEndpoint: "https://api.asgardeo.io/t/genmedx/oauth2/revoke",
@@ -185,7 +185,7 @@ export default function ProfileScreen() {
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>GenmedX v1.0.0</Text>
-          <Text style={styles.footerText}>© 2023 GenmedX. All rights reserved.</Text>
+          <Text style={styles.footerText}>© 2025 GenmedX. All rights reserved.</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
