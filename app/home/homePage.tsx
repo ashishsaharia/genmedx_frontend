@@ -30,6 +30,32 @@ export default function ImagePickerScreen() {
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
   const [files, setFiles] = useState<string[]>([]);
 
+  const [activityData, setActivityData] = useState({
+  steps: "0",
+  bloodPressure: "0",
+  sleep: "0",
+});
+
+useEffect(() => {
+  const fetchActivityData = async () => {
+    try {
+      const response = await fetch(`${url}/activity/${userData.email}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        setActivityData(data);
+      } else {
+        console.error("Error fetching activity data:", data.message);
+      }
+    } catch (error) {
+      console.error("Fetch activity data error:", error);
+    }
+  };
+
+  fetchActivityData();
+}, []);
+
+
    useEffect(() => {
   // const platform = navigator.platform; // or use navigator.userAgentData.platform if needed
 
@@ -135,7 +161,7 @@ export default function ImagePickerScreen() {
                 <View style={[styles.iconCircle, { backgroundColor: "rgba(255, 99, 71, 0.15)" }]}>
                   <Feather name="heart" size={20} color="#ff6347" />
                 </View>
-                <Text style={styles.statValue}>72 bpm</Text>
+                <Text style={styles.statValue}>{activityData.bloodPressure}</Text>
                 <Text style={styles.statLabel}>Heart Rate</Text>
               </View>
 
@@ -143,7 +169,7 @@ export default function ImagePickerScreen() {
                 <View style={[styles.iconCircle, { backgroundColor: "rgba(65, 105, 225, 0.15)" }]}>
                   <MaterialCommunityIcons name="sleep" size={20} color="#4169e1" />
                 </View>
-                <Text style={styles.statValue}>7.5h</Text>
+                <Text style={styles.statValue}>{activityData.sleep}</Text>
                 <Text style={styles.statLabel}>Sleep</Text>
               </View>
 
@@ -151,7 +177,7 @@ export default function ImagePickerScreen() {
                 <View style={[styles.iconCircle, { backgroundColor: "rgba(50, 205, 50, 0.15)" }]}>
                   <Ionicons name="footsteps-outline" size={20} color="#32cd32" />
                 </View>
-                <Text style={styles.statValue}>6,240</Text>
+                <Text style={styles.statValue}>{activityData.steps}</Text>
                 <Text style={styles.statLabel}>Steps</Text>
               </View>
             </View>

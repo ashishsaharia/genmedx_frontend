@@ -59,17 +59,11 @@ export default function HealthMetricsForm() {
 
     const data = await response.json();
 
-    if (response.ok) {
-      Alert.alert("Success", "Medical information saved successfully", [
-        {
-          text: "OK",
-          onPress: () => router.back(),
-        },
-      ]);
-    } else {
-      Alert.alert("Error", data.error || "Something went wrong");
+    if(response.ok){
+      router.push({pathname:"/home/homePage",params:{user}});
     }
-  } catch (error) {
+    }
+   catch (error) {
     console.error("Error submitting medical info:", error);
     Alert.alert("Error", "Network error. Please try again.");
   }

@@ -11,6 +11,7 @@ export default function RootLayout()
         <Stack.Screen name="activity" options={{title: "activity"}}></Stack.Screen>
         <Stack.Screen name="medicalInfo" options={{title: "Medical Information"}}></Stack.Screen>
         <Stack.Screen name="useronboarding" options={{title: "User Onboarding"}}></Stack.Screen>
+        <Stack.Screen name="add-medical-condition" options={{title: "add-medical-condition"}}></Stack.Screen>
 
     </Stack>)
 }
