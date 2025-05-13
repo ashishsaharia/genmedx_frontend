@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
   Modal,
   TextInput,
+  Platform,
 } from "react-native"
 import { useRouter, useLocalSearchParams } from "expo-router"
 import { Feather } from "@expo/vector-icons"
@@ -27,6 +28,9 @@ export default function ProfileScreen() {
   const [modalVisible, setModalVisible] = useState(false)
   const [conditionName, setConditionName] = useState("")
   const [selectedSeverity, setSelectedSeverity] = useState("Mild")
+
+       let url =
+      Platform.OS === "web" ? "http://localhost:3000" : "http://10.7.14.19:3000";
 
   const firstName = userData?.name ? userData.name.split(" ")[0] : "User"
   // Mock medical conditions - in a real app, these would come from an API or storage
@@ -84,35 +88,58 @@ export default function ProfileScreen() {
   }
 
   const handleLogout = async () => {
-    Alert.alert("Confirm Logout", "Are you sure you want to log out?", [
-      {
-        text: "Cancel",
-        style: "cancel",
+  console.log("Logout function called");
+  try {
+    const response = await fetch(`${url}/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-      {
-        text: "Logout",
-        onPress: async () => {
-          try {
-            // Clear any auth tokens or session data
-            await AuthSession.revokeAsync(
-              {
-                token: "w7AnnMlXO8w6JUX1zyBMoXP5A8TKuj2nmhqwM5rsr10a", // Replace with actual token
-              },
-              {
-                revocationEndpoint: "https://api.asgardeo.io/t/genmedx/oauth2/revoke",
-              },
-            )
-            // Navigate back to login/index page
-            router.replace("/")
-          } catch (error) {
-            console.error("Logout error:", error)
-            // Even if revoke fails, we'll still redirect to login
-            router.replace("/")
-          }
-        },
-      },
-    ])
+      body: JSON.stringify({
+        userEmail: userData.email,
+      }),
+    });
+
+    if (response.ok) {
+      console.log("Logout successful");
+      router.replace("/");
+    } else {
+      console.log("Logout failed:", response.status);
+    }
+  } catch (error) {
+    console.error("Logout error:", error);
   }
+};
+
+
+    // Alert.alert("Confirm Logout", "Are you sure you want to log out?", [
+    //   {
+    //     text: "Cancel",
+    //     style: "cancel",
+    //   },
+    //   {
+    //     text: "Logout",
+    //     onPress: async () => {
+    //       try {
+    //         // Clear any auth tokens or session data
+    //         await AuthSession.revokeAsync(
+    //           {
+    //             token: "w7AnnMlXO8w6JUX1zyBMoXP5A8TKuj2nmhqwM5rsr10a", // Replace with actual token
+    //           },
+    //           {
+    //             revocationEndpoint: "https://api.asgardeo.io/t/genmedx/oauth2/revoke",
+    //           },
+    //         )
+    //         // Navigate back to login/index page
+          // } catch (error) {
+          //   console.error("Logout error:", error)
+          //   // Even if revoke fails, we'll still redirect to login
+          //   router.replace("/")
+          // }
+        
+    //   },
+    // ])
+  // }
 
   if (loading) {
     return (
@@ -206,8 +233,8 @@ export default function ProfileScreen() {
             <Feather name="chevron-right" size={20} color="#999" style={styles.settingArrow} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-            <Feather name="log-out" size={20} color="white" style={styles.logoutIcon} />
+          <TouchableOpacity style={styles.logoutButton} onPress={()=>{handleLogout}}disabled={false}>
+            <Feather  onPress={handleLogout}name="log-out" size={20} color="white" style={styles.logoutIcon} />
             <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
         </View>
